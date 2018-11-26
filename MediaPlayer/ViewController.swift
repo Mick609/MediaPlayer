@@ -59,9 +59,9 @@ class ViewController: NSViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        print("Start the application")
-        
+        let username = NSUserName()
+        rootAddr = "/Users/" + username + "/Desktop/Nov23C/"
+        rootAddrText.stringValue = rootAddr
     }
     @IBAction func loadRoot(_ sender: Any) {
         rootAddr = rootAddrText.stringValue
@@ -120,7 +120,10 @@ class ViewController: NSViewController {
                 for file in files {
                     let sensorFileDirs = getFilesInDir(dirAddr: file)!;
                     for sensorFileDir in sensorFileDirs {
-                        setChart(sensorFileDir: sensorFileDir)
+                        var urls = sensorFileDir.absoluteString.split(separator: "/")
+                        if urls[urls.count-1] != "metronome.txt" {
+                            setChart(sensorFileDir: sensorFileDir)
+                        }
                     }
                 }
             }
@@ -147,24 +150,22 @@ class ViewController: NSViewController {
     @IBAction func reset(_ sender: Any) {
         print ("reset")
         actionPause()
-        playVideoFromTimeZero(player: player1!)
-        playVideoFromTimeZero(player: player2!)
         setChartsToTimeZero()
         pauseResumeChartPlay(isPlaying: true)
+        playVideoFromTimeZero(player: player1!)
+        playVideoFromTimeZero(player: player2!)
     }
     @IBAction func pause(_ sender: Any) {
         print ("pause")
         actionPause()
     }
     func actionPause(){
+        pauseResumeChartPlay(isPlaying: false)
         player1!.pause()
         player2!.pause()
-        pauseResumeChartPlay(isPlaying: false)
     }
     @IBAction func rewind(_ sender: Any) {
         print ("rewind")
-        player1?.seek(to: getDestinateRewindTime(time: -5, player: player1!))
-        player2?.seek(to: getDestinateRewindTime(time: -5, player: player2!))
         
         currentDataIndex1 -= 300
         currentDataIndex2 -= 300
@@ -175,12 +176,12 @@ class ViewController: NSViewController {
         setChartDataFromIndex(index: currentDataIndex2, currentChart: lineChart2)
         setChartDataFromIndex(index: currentDataIndex3, currentChart: lineChart3)
         setChartDataFromIndex(index: currentDataIndex4, currentChart: lineChart4)
+        
+        player1?.seek(to: getDestinateRewindTime(time: -5, player: player1!))
+        player2?.seek(to: getDestinateRewindTime(time: -5, player: player2!))
     }
     @IBAction func forward(_ sender: Any) {
         print ("forward")
-        
-        player1?.seek(to: getDestinateRewindTime(time: +5, player: player1!))
-        player2?.seek(to: getDestinateRewindTime(time: +5, player: player2!))
         
         currentDataIndex1 += 300
         currentDataIndex2 += 300
@@ -191,15 +192,21 @@ class ViewController: NSViewController {
         setChartDataFromIndex(index: currentDataIndex2, currentChart: lineChart2)
         setChartDataFromIndex(index: currentDataIndex3, currentChart: lineChart3)
         setChartDataFromIndex(index: currentDataIndex4, currentChart: lineChart4)
+        
+        player1?.seek(to: getDestinateRewindTime(time: +5, player: player1!))
+        player2?.seek(to: getDestinateRewindTime(time: +5, player: player2!))
     }
     func playVideoFromTimeZero(player: AVPlayer){
         var offset = 0.0
         if player == player1{
             offset = timeZero.timeIntervalSince(timeVideo1)
+//            offset = timeVideo1.timeIntervalSince(timeZero)
+            print("Offset video1: " + String(offset))
         }else if player == player2 {
             offset = timeZero.timeIntervalSince(timeVideo2)
+//            offset = timeVideo2.timeIntervalSince(timeZero)
+            print("Offset video2: " + String(offset))
         }
-        print(offset)
         seekToSecond(player: player, sec: offset + 3)
         player.play()
     }
