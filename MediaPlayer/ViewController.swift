@@ -59,6 +59,9 @@ class ViewController: NSViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        print("Start the application")
+        
     }
     @IBAction func loadRoot(_ sender: Any) {
         rootAddr = rootAddrText.stringValue
