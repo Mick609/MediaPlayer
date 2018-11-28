@@ -200,11 +200,11 @@ class ViewController: NSViewController {
         var offset = 0.0
         if player == player1{
             offset = timeZero.timeIntervalSince(timeVideo1)
-//            offset = timeVideo1.timeIntervalSince(timeZero)
+            //            offset = timeVideo1.timeIntervalSince(timeZero)
             print("Offset video1: " + String(offset))
         }else if player == player2 {
             offset = timeZero.timeIntervalSince(timeVideo2)
-//            offset = timeVideo2.timeIntervalSince(timeZero)
+            //            offset = timeVideo2.timeIntervalSince(timeZero)
             print("Offset video2: " + String(offset))
         }
         seekToSecond(player: player, sec: offset + 3)
@@ -535,75 +535,12 @@ class ViewController: NSViewController {
             currentChart.data = data
             currentChart.notifyDataSetChanged()// let the chart know it's data changed
             currentChart.invalidateRestorableState()
-        }}
-    
-    
-    func forwardChartForIndexCount(indexCount: Int, currentChart: LineChartView){
-        var oldIndex = 0
-        var currentIndex = 0
-        var sensorData = [[Int]]()
-        if currentChart == lineChart1{
-            sensorData = allData[0]
-            oldIndex = currentDataIndex1
-            currentDataIndex1 += indexCount
-            currentIndex = currentDataIndex1
-        }else if currentChart == lineChart2{
-            sensorData = allData[1]
-            oldIndex = currentDataIndex2
-            currentDataIndex2 += indexCount
-            currentIndex = currentDataIndex2
-        }else if currentChart == lineChart3{
-            sensorData = allData[2]
-            oldIndex = currentDataIndex3
-            currentDataIndex3 += indexCount
-            currentIndex = currentDataIndex3
-        }else if currentChart == lineChart4{
-            sensorData = allData[3]
-            oldIndex = currentDataIndex4
-            currentDataIndex4 += indexCount
-            currentIndex = currentDataIndex4
-        }
-        print( currentChart.chartDescription!.text! + ": " + String(oldIndex)+","+String(currentIndex))
-        var timestamps = sensorData[0]
-        var accX = sensorData[1]
-        var accY =  sensorData[2]
-        var accZ = sensorData[3]
-        var gyroX = sensorData[4]
-        var gyroY =  sensorData[5]
-        var gyroZ =  sensorData[6]
-        var distanceX1 =  sensorData[7]
-        var distanceX2 =  sensorData[8]
-        if currentIndex+dataEntrySize<timestamps.count{
-            for i in 0..<indexCount {
-                //                currentChart.data?.getDataSetByIndex(0)?.removeFirst()
-                //                currentChart.data?.getDataSetByIndex(1)?.removeFirst()
-                //                currentChart.data?.getDataSetByIndex(2)?.removeFirst()
-                //                currentChart.data?.getDataSetByIndex(3)?.removeFirst()
-                //                currentChart.data?.getDataSetByIndex(4)?.removeFirst()
-                //                currentChart.data?.getDataSetByIndex(5)?.removeFirst()
-                //                currentChart.data?.getDataSetByIndex(6)?.removeFirst()
-                //                currentChart.data?.getDataSetByIndex(7)?.removeFirst()
-                
-                currentChart.data?.getDataSetByIndex(0)?.addEntry(ChartDataEntry(x: Double(timestamps[oldIndex+i+1]), y:Double( accX[oldIndex+i+1])))
-                currentChart.data?.getDataSetByIndex(1)?.addEntry(ChartDataEntry(x: Double(timestamps[oldIndex+i+1]), y:Double( accY[oldIndex+i+1])))
-                currentChart.data?.getDataSetByIndex(2)?.addEntry(ChartDataEntry(x: Double(timestamps[oldIndex+i+1]), y:Double( accZ[oldIndex+i+1])))
-                currentChart.data?.getDataSetByIndex(3)?.addEntry(ChartDataEntry(x: Double(timestamps[oldIndex+i+1]), y:Double( gyroX[oldIndex+i+1])))
-                currentChart.data?.getDataSetByIndex(4)?.addEntry(ChartDataEntry(x: Double(timestamps[oldIndex+i+1]), y:Double( gyroY[oldIndex+i+1])))
-                currentChart.data?.getDataSetByIndex(5)?.addEntry(ChartDataEntry(x: Double(timestamps[oldIndex+i+1]), y:Double( gyroZ[oldIndex+i+1])))
-                currentChart.data?.getDataSetByIndex(6)?.addEntry(ChartDataEntry(x: Double(timestamps[oldIndex+i+1]), y:Double( distanceX1[oldIndex+i+1])))
-                currentChart.data?.getDataSetByIndex(7)?.addEntry(ChartDataEntry(x: Double(timestamps[oldIndex+i+1]), y:Double( distanceX2[oldIndex+i+1])))
-            }
-            
-            currentChart.notifyDataSetChanged()// let the chart know it's data changed
-            currentChart.invalidateRestorableState()
         }
     }
     func pauseResumeChartPlay(isPlaying: Bool){
         if isPlaying{
             print("Start Timer")
-            
             self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.updateChart), userInfo: nil, repeats: true)
-            
         }
         else{
             print("Stop Timer")
@@ -620,11 +557,6 @@ class ViewController: NSViewController {
         self.setChartDataFromIndex(index:  self.currentDataIndex2, currentChart:  self.lineChart2)
         self.setChartDataFromIndex(index:  self.currentDataIndex3, currentChart:  self.lineChart3)
         self.setChartDataFromIndex(index:  self.currentDataIndex4, currentChart:  self.lineChart4)
-        
-        //        forwardChartForIndexCount(indexCount: 100, currentChart: lineChart1)
-        //        forwardChartForIndexCount(indexCount: 100, currentChart: lineChart2)
-        //        forwardChartForIndexCount(indexCount: 100, currentChart: lineChart3)
-        //        forwardChartForIndexCount(indexCount: 100, currentChart: lineChart4)
     }
     func setTimeZero(){
         if timeZero < timeVideo1 {
